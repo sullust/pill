@@ -1,571 +1,154 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pills Left</title>
-<style id="app-style">
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-
-/* Layout: one narrow column — prescription-label banner, take button, blister-pack supply, then the log. */
-:root {
-  --bg: #EEF1F4;
-  --surface: #FFFFFF;
-  --ink: #16202B;
-  --muted: #5D6B7A;
-  --line: #D5DCE3;
-  --accent: #2346C8;
-  --accent-ink: #FFFFFF;
-  --warn: #B4231B;
-  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --font-body: "Public Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0F141A;
-    --surface: #18202A;
-    --ink: #E8EEF4;
-    --muted: #93A1B0;
-    --line: #2A3542;
-    --accent: #7C97FF;
-    --accent-ink: #0B1330;
-    --warn: #FF8A7E;
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  --bg: #0F141A;
-  --surface: #18202A;
-  --ink: #E8EEF4;
-  --muted: #93A1B0;
-  --line: #2A3542;
-  --accent: #7C97FF;
-  --accent-ink: #0B1330;
-  --warn: #FF8A7E;
-  color-scheme: dark;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-}
-
-#app {
-  max-width: 30rem;
-  margin: 0 auto;
-  padding-block: 1.5rem 3rem;
-  padding-inline: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.label {
-  background: var(--surface);
-  border: 2px solid var(--ink);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.label-band {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  background: var(--ink);
-  color: var(--surface);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 0.45rem 0.9rem;
-}
-
-.label.low { border-color: var(--warn); }
-.label.low .label-band { background: var(--warn); }
-
-.label-body { padding: 0.9rem 0.9rem 1rem; }
-
-.runout-date {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.6rem, 13vw, 3.6rem);
-  line-height: 1;
-  text-wrap: balance;
-}
-
-.left-line {
-  margin: 0.55rem 0 0;
-  font-size: 1.05rem;
-}
-
-.left-line strong { font-variant-numeric: tabular-nums; }
-.label.low .left-line strong { color: var(--warn); }
-
-.rx {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.1rem;
-  margin-top: 0.85rem;
-  padding-top: 0.7rem;
-  border-top: 1px dashed var(--line);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.take-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 1.15rem 1rem;
-  border: none;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--font-body);
-  font-size: 1.15rem;
-  font-weight: 700;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.08s ease, opacity 0.15s ease;
-}
-
-.take-btn:active:not(:disabled) { transform: scale(0.97); }
-.take-btn:disabled { opacity: 0.45; cursor: default; }
-.take-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-
-.status {
-  margin: 0.55rem 0 0;
-  min-height: 1.1rem;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--muted);
-}
-
-.status[data-tone="warn"] { color: var(--warn); }
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1rem;
-}
-
-.card-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.85rem;
-}
-
-.card h2 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.3rem;
-  letter-spacing: 0.02em;
-}
-
-.reset-btn {
-  background: none;
-  border: none;
-  padding: 0.35rem 0.1rem;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
-
-.reset-btn.armed { color: var(--warn); }
-.reset-btn:disabled { opacity: 0.45; cursor: default; }
-.reset-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-
-.blister {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.55rem;
-  padding: 0.8rem;
-  background: var(--bg);
-  border-radius: 10px;
-}
-
-.cap {
-  aspect-ratio: 2 / 1;
-  max-width: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent) 50%, color-mix(in srgb, var(--accent) 45%, var(--surface)) 50%);
-}
-
-.cap.taken {
-  background: transparent;
-  border: 1.5px dashed var(--line);
-}
-
-.caption {
-  margin: 0.7rem 0 0;
-  font-size: 0.85rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.day {
-  margin: 0.9rem 0 0.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.day:first-child { margin-top: 0; }
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.55rem 0;
-  border-top: 1px solid var(--line);
-  font-size: 0.92rem;
-}
-
-.day + .row { border-top: none; }
-.row .what { min-width: 0; }
-.row.reset .what { color: var(--accent); font-weight: 600; }
-
-.row time {
-  flex: none;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.empty {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--muted);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .take-btn { transition: none; }
-  .take-btn:active:not(:disabled) { transform: none; }
-}
-</style>
-<main id="app"></main>
-<script type="application/json" id="seed">{"rev":0,"left":30,"log":[]}</script>
-<script id="app-script">
-(function () {
-  var START = 30;
-  var LOW_AT = 5;
-  var MAX_LOG = 2000;
-  var LOCAL_KEY = "pillsLeft.local";
-  // Must match the skeleton the Artifact tool wraps around the page, so a republish replaces it instead of nesting it.
-  var SKELETON_HEAD = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>';
-
-  var app = document.getElementById("app");
-  var api = null;
-  var mode = "loading";
-  var retried = false;
-  var armedReset = false;
-  var armTimer = null;
-
-  function normalize(raw) {
-    var s = raw && typeof raw === "object" ? raw : {};
-    var rev = typeof s.rev === "number" && s.rev >= 0 ? Math.floor(s.rev) : 0;
-    var left = typeof s.left === "number" ? Math.max(0, Math.min(START, Math.floor(s.left))) : START;
-    var log = Array.isArray(s.log) ? s.log.filter(function (e) {
-      return e && typeof e.t === "string" && !isNaN(Date.parse(e.t)) &&
-        (e.type === "took" || e.type === "reset") && typeof e.left === "number";
-    }) : [];
-    return { rev: rev, left: left, log: log };
-  }
-
-  function readSeed() {
-    try { return normalize(JSON.parse(document.getElementById("seed").textContent)); }
-    catch (e) { return normalize(null); }
-  }
-
-  function readLocal() {
-    try {
-      var raw = localStorage.getItem(LOCAL_KEY);
-      return raw ? normalize(JSON.parse(raw)) : null;
-    } catch (e) { return null; }
-  }
-
-  function writeLocal(s) {
-    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(s)); } catch (e) {}
-  }
-
-  var state = readSeed();
-
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-    });
-  }
-
-  function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-
-  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
-
-  function fmtDate(d) {
-    var opts = { weekday: "short", month: "short", day: "numeric" };
-    if (d.getFullYear() !== new Date().getFullYear()) opts.year = "numeric";
-    return d.toLocaleDateString(undefined, opts);
-  }
-
-  function fmtTime(iso) {
-    return new Date(iso).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-  }
-
-  function dayKey(iso) {
-    var d = new Date(iso);
-    return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
-  }
-
-  function dayLabel(iso) {
-    var d = new Date(iso);
-    var diff = Math.round((startOfDay(new Date()) - startOfDay(d)) / 86400000);
-    if (diff === 0) return "Today";
-    if (diff === 1) return "Yesterday";
-    return fmtDate(d);
-  }
-
-  function lastTaken() {
-    for (var i = state.log.length - 1; i >= 0; i--) {
-      if (state.log[i].type === "took") return state.log[i];
+<meta name="apple-mobile-web-app-title" content="Pills Left">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<script>
+  // Home-screen shortcuts save the address below, so launching one goes straight to the app.
+  (function () {
+    var APP_URL = "https://claude.ai/artifact/UqqYWXqzEZcTRZ3gGMx9a4";
+    var standalone = window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    if (/[?&]launch=1\b/.test(location.search) || standalone) {
+      document.documentElement.className = "launching";
+      location.replace(APP_URL);
+    } else if (history.replaceState) {
+      history.replaceState(null, "", "?launch=1");
     }
-    return null;
-  }
-
-  function statusLine() {
-    if (mode === "loading") return ["Connecting…"];
-    if (mode === "saving") return ["Saving…"];
-    if (mode === "server") return ["Saved to your Claude account"];
-    if (mode === "readonly") return ["Read-only view — changes won’t save", "warn"];
-    if (mode === "error") return ["Couldn’t save — tap again to retry", "warn"];
-    if (mode === "local") return ["Saved in this browser only", "warn"];
-    return [" "];
-  }
-
-  function renderBanner() {
-    var left = state.left;
-    var out = left === 0;
-    var low = left <= LOW_AT;
-    var last = lastTaken();
-    var lastText = last ? dayLabel(last.t) + " " + fmtTime(last.t) : "Not yet";
-    var headline = out ? "Refill now" : fmtDate(addDays(startOfDay(new Date()), left));
-    var leftLine = out
-      ? "<strong>0</strong> pills left. Tap Reset after you refill."
-      : "<strong>" + left + "</strong> " + (left === 1 ? "pill" : "pills") + " left" + (low ? " — running low" : "");
-    return '<section class="label' + (low ? " low" : "") + '" aria-live="polite">' +
-      '<div class="label-band"><span>' + (out ? "Out of pills" : "Will run out on") + "</span><span>Rx</span></div>" +
-      '<div class="label-body">' +
-        '<p class="runout-date">' + escapeHtml(headline) + "</p>" +
-        '<p class="left-line">' + leftLine + "</p>" +
-        '<div class="rx"><span>Qty ' + START + "</span><span>Take 1 daily</span><span>Last taken: " + escapeHtml(lastText) + "</span></div>" +
-      "</div>" +
-    "</section>";
-  }
-
-  function renderSupply(locked) {
-    var taken = START - state.left;
-    var caps = "";
-    for (var i = 0; i < START; i++) caps += '<span class="cap' + (i < taken ? " taken" : "") + '"></span>';
-    return '<section class="card">' +
-      '<div class="card-head"><h2>Supply</h2>' +
-        '<button class="reset-btn' + (armedReset ? " armed" : "") + '" id="reset-btn" type="button" data-action="reset"' + (locked ? " disabled" : "") + ">" +
-          (armedReset ? "Tap again to reset to " + START : "Reset to " + START) +
-        "</button></div>" +
-      '<div class="blister" role="img" aria-label="' + state.left + " of " + START + ' pills left">' + caps + "</div>" +
-      '<p class="caption">' + state.left + " of " + START + " left · " + taken + " taken</p>" +
-    "</section>";
-  }
-
-  function renderLog() {
-    var body = "";
-    if (!state.log.length) {
-      body = '<p class="empty">Nothing logged yet. Tap “Took a pill” after each dose.</p>';
-    } else {
-      var lastKey = null;
-      var items = state.log.slice().reverse().slice(0, 200);
-      for (var i = 0; i < items.length; i++) {
-        var e = items[i];
-        var k = dayKey(e.t);
-        if (k !== lastKey) {
-          body += '<p class="day">' + escapeHtml(dayLabel(e.t)) + "</p>";
-          lastKey = k;
-        }
-        body += '<div class="row' + (e.type === "reset" ? " reset" : "") + '">' +
-          '<span class="what">' + (e.type === "reset" ? "Reset to " + e.left : "Took a pill · " + e.left + " left") + "</span>" +
-          '<time datetime="' + escapeHtml(e.t) + '">' + escapeHtml(fmtTime(e.t)) + "</time></div>";
-      }
-    }
-    return '<section class="card"><div class="card-head"><h2>Log</h2></div>' + body + "</section>";
-  }
-
-  function render() {
-    var focusedId = document.activeElement && document.activeElement.id;
-    var locked = mode === "loading" || mode === "saving" || mode === "readonly";
-    var status = statusLine();
-    app.innerHTML =
-      renderBanner() +
-      "<div>" +
-        '<button class="take-btn" id="take-btn" type="button" data-action="take"' + (locked || state.left === 0 ? " disabled" : "") + ">" +
-          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
-            '<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)" stroke="currentColor" stroke-width="2"/>' +
-            '<line x1="9.9" y1="14.1" x2="14.1" y2="9.9" stroke="currentColor" stroke-width="2"/>' +
-          "</svg><span>Took a pill</span></button>" +
-        '<p class="status" id="status"' + (status[1] ? ' data-tone="' + status[1] + '"' : "") + ">" + escapeHtml(status[0]) + "</p>" +
-      "</div>" +
-      renderSupply(locked) +
-      renderLog();
-    if (focusedId) {
-      var el = document.getElementById(focusedId);
-      if (el && !el.disabled) el.focus();
-    }
-  }
-
-  function seedJson(s) {
-    return JSON.stringify(s).replace(/</g, "\\u003c");
-  }
-
-  // Returns null if the page template can't be found, so a broken copy is never published.
-  function buildDocument(s) {
-    var styleEl = document.getElementById("app-style");
-    var codeEl = document.getElementById("app-script");
-    if (!styleEl || !codeEl || !codeEl.textContent) return null;
-    return SKELETON_HEAD + "\n" +
-      "<title>Pills Left</title>\n" +
-      '<style id="app-style">' + styleEl.textContent + "</style>\n" +
-      '<main id="app"></main>\n' +
-      '<script type="application/json" id="seed">' + seedJson(s) + "<\/script>\n" +
-      '<script id="app-script">' + codeEl.textContent + "<\/script>\n" +
-      "</body></html>";
-  }
-
-  function publish(prev) {
-    var doc = buildDocument(state);
-    if (!doc) {
-      state = prev;
-      mode = "error";
-      render();
-      return;
-    }
-    mode = "saving";
-    render();
-    api.publish(doc).then(function () {
-      // The viewer reloads this page to the new version.
-      mode = "server";
-      render();
-    }, function (err) {
-      var code = err && err.code;
-      if (code === "conflict") return; // the viewer reloads to the newer version
-      if (code === "upstream_error" && !retried) {
-        retried = true;
-        setTimeout(function () { publish(prev); }, 1500 + Math.random() * 1500);
-        return;
-      }
-      state = prev;
-      if (code === "not_writer" || code === "not_granted" || code === "not_declared" ||
-          code === "capability_disabled" || code === "capability_removed" || code === "consent_required") {
-        mode = "readonly";
-      } else {
-        mode = "error";
-      }
-      render();
-    });
-  }
-
-  function apply(next) {
-    var prev = state;
-    state = next;
-    retried = false;
-    if (mode === "local") {
-      state.rev = Math.max(state.rev, (readLocal() || { rev: 0 }).rev + 1);
-      writeLocal(state);
-      render();
-      return;
-    }
-    publish(prev);
-  }
-
-  function withEntry(left, type) {
-    var log = state.log.concat([{ t: new Date().toISOString(), type: type, left: left }]);
-    if (log.length > MAX_LOG) log = log.slice(log.length - MAX_LOG);
-    return { rev: state.rev + 1, left: left, log: log };
-  }
-
-  function canAct() {
-    return mode === "server" || mode === "error" || mode === "local";
-  }
-
-  function takePill() {
-    if (!canAct() || state.left <= 0) return;
-    apply(withEntry(state.left - 1, "took"));
-  }
-
-  function disarmReset() {
-    armedReset = false;
-    clearTimeout(armTimer);
-  }
-
-  function resetSupply() {
-    if (!canAct()) return;
-    if (!armedReset) {
-      armedReset = true;
-      clearTimeout(armTimer);
-      armTimer = setTimeout(function () { armedReset = false; render(); }, 4000);
-      render();
-      return;
-    }
-    disarmReset();
-    apply(withEntry(START, "reset"));
-  }
-
-  app.addEventListener("click", function (ev) {
-    var target = ev.target.closest("[data-action]");
-    if (!target || target.disabled) return;
-    if (target.dataset.action === "take") { disarmReset(); takePill(); }
-    if (target.dataset.action === "reset") resetSupply();
-  });
-
-  function useLocal() {
-    mode = "local";
-    var local = readLocal();
-    if (local && local.rev > state.rev) state = local;
-    render();
-  }
-
-  render();
-
-  if (window.claude && typeof window.claude.use === "function") {
-    window.claude.use("artifact").then(function (ns) {
-      if (!ns) { useLocal(); return; }
-      api = ns;
-      mode = "server";
-      render();
-    }, useLocal);
-  } else {
-    useLocal();
-  }
-})();
+  })();
 </script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Public+Sans:wght@400;600;700&display=swap">
+<style>
+  :root {
+    --bg: #EEF1F4;
+    --surface: #FFFFFF;
+    --ink: #16202B;
+    --muted: #5D6B7A;
+    --line: #D5DCE3;
+    --accent: #2346C8;
+    --accent-ink: #FFFFFF;
+    --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+    --font-body: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+    color-scheme: light;
+  }
 
-</body></html>
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F141A;
+      --surface: #18202A;
+      --ink: #E8EEF4;
+      --muted: #93A1B0;
+      --line: #2A3542;
+      --accent: #7C97FF;
+      --accent-ink: #0B1330;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    padding-block: max(2rem, env(safe-area-inset-top)) 2rem;
+    padding-inline: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  main {
+    width: 100%;
+    max-width: 26rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .app-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 10px 24px -12px rgba(0, 0, 0, 0.35);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+
+  .lede { margin: -0.5rem 0 0; color: var(--muted); }
+
+  .open-btn {
+    display: block;
+    width: 100%;
+    padding: 1.05rem 1rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .open-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  .steps {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    text-align: left;
+  }
+
+  .steps h2 { margin: 0 0 0.6rem; font-size: 1rem; }
+
+  .steps ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 0.95rem;
+  }
+
+  .steps .note { margin: 0.75rem 0 0; font-size: 0.85rem; color: var(--muted); }
+
+  .launching-msg { display: none; color: var(--muted); }
+  .launching .launching-msg { display: block; }
+  .launching .home-only { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <img class="app-icon" src="apple-touch-icon.png" alt="" width="96" height="96">
+  <h1>Pills Left</h1>
+  <p class="launching-msg">Opening Pills Left&hellip; <a href="https://claude.ai/artifact/UqqYWXqzEZcTRZ3gGMx9a4">Tap here</a> if nothing happens.</p>
+  <p class="lede home-only">Opens your pill tracker on Claude.ai.</p>
+  <a class="open-btn home-only" href="https://claude.ai/artifact/UqqYWXqzEZcTRZ3gGMx9a4">Open Pills Left</a>
+  <section class="steps home-only">
+    <h2>Add it to your iPhone home screen</h2>
+    <ol>
+      <li>In Safari, tap the Share button.</li>
+      <li>Tap <strong>Add to Home Screen</strong>.</li>
+      <li>If you see <strong>Open as Web App</strong>, turn it off so the app opens in Safari, where you're already signed in to Claude.</li>
+      <li>Tap <strong>Add</strong>.</li>
+    </ol>
+    <p class="note">The home-screen icon opens Pills Left directly.</p>
+  </section>
+</main>
+</body>
+</html>
