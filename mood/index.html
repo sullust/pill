@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mood and Pill Log</title>
+<meta name="apple-mobile-web-app-title" content="Mood and Pill Log">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-512.png">
+<script>
+  // Home-screen shortcuts save the address below, so launching one goes straight to the app.
+  (function () {
+    var APP_URL = "https://claude.ai/artifact/QYKkzCaZCYm7hCbWXC4U5W";
+    var standalone = window.navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    if (/[?&]launch=1\b/.test(location.search) || standalone) {
+      document.documentElement.className = "launching";
+      location.replace(APP_URL);
+    } else if (history.replaceState) {
+      history.replaceState(null, "", "?launch=1");
+    }
+  })();
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Public+Sans:wght@400;600;700&display=swap">
+<style>
+  :root {
+    --bg: #EEF1F4;
+    --surface: #FFFFFF;
+    --ink: #16202B;
+    --muted: #5D6B7A;
+    --line: #D5DCE3;
+    --accent: #2346C8;
+    --accent-ink: #FFFFFF;
+    --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+    --font-body: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F141A;
+      --surface: #18202A;
+      --ink: #E8EEF4;
+      --muted: #93A1B0;
+      --line: #2A3542;
+      --accent: #7C97FF;
+      --accent-ink: #0B1330;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    padding-block: max(2rem, env(safe-area-inset-top)) 2rem;
+    padding-inline: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  main {
+    width: 100%;
+    max-width: 26rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .app-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 10px 24px -12px rgba(0, 0, 0, 0.35);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+
+  .lede { margin: -0.5rem 0 0; color: var(--muted); }
+
+  .open-btn {
+    display: block;
+    width: 100%;
+    padding: 1.05rem 1rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .open-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  .steps {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    text-align: left;
+  }
+
+  .steps h2 { margin: 0 0 0.6rem; font-size: 1rem; }
+
+  .steps ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 0.95rem;
+  }
+
+  .steps .note { margin: 0.75rem 0 0; font-size: 0.85rem; color: var(--muted); }
+
+  .launching-msg { display: none; color: var(--muted); }
+  .launching .launching-msg { display: block; }
+  .launching .home-only { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <img class="app-icon" src="apple-touch-icon.png" alt="" width="96" height="96">
+  <h1>Mood and Pill Log</h1>
+  <p class="launching-msg">Opening Mood and Pill Log&hellip; <a href="https://claude.ai/artifact/QYKkzCaZCYm7hCbWXC4U5W">Tap here</a> if nothing happens.</p>
+  <p class="lede home-only">Opens your mood and pill log on Claude.ai.</p>
+  <a class="open-btn home-only" href="https://claude.ai/artifact/QYKkzCaZCYm7hCbWXC4U5W">Open Mood and Pill Log</a>
+  <section class="steps home-only">
+    <h2>Add it to your iPhone home screen</h2>
+    <ol>
+      <li>In Safari, tap the Share button.</li>
+      <li>Tap <strong>Add to Home Screen</strong>.</li>
+      <li>If you see <strong>Open as Web App</strong>, turn it off so the app opens in Safari, where you're already signed in to Claude.</li>
+      <li>Tap <strong>Add</strong>.</li>
+    </ol>
+    <p class="note">The home-screen icon opens Mood and Pill Log directly.</p>
+  </section>
+</main>
+</body>
+</html>

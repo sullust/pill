@@ -1,0 +1,482 @@
+<title>Mood and Pill Log</title>
+<style id="app-style">
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* Layout: one narrow column — a big pill button, a row of five mood buttons, a per-mood summary, then the newest-first log. */
+:root {
+  --bg: #F1F3F6;
+  --surface: #FFFFFF;
+  --surface-alt: #E7EBF1;
+  --ink: #18212C;
+  --muted: #5E6B7B;
+  --line: #D6DCE5;
+  --pill: #2346C8;
+  --pill-ink: #FFFFFF;
+  --focus: #18212C;
+  --font-display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
+  --font-body: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1319;
+    --surface: #171E27;
+    --surface-alt: #202935;
+    --ink: #E8EEF5;
+    --muted: #93A1B2;
+    --line: #2B3644;
+    --pill: #7C97FF;
+    --pill-ink: #0B1330;
+    --focus: #E8EEF5;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0E1319;
+  --surface: #171E27;
+  --surface-alt: #202935;
+  --ink: #E8EEF5;
+  --muted: #93A1B2;
+  --line: #2B3644;
+  --pill: #7C97FF;
+  --pill-ink: #0B1330;
+  --focus: #E8EEF5;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding-block: 1.25rem 3rem;
+  padding-inline: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.sub { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.95rem; }
+
+button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.pill-btn {
+  width: 100%;
+  min-height: 6.5rem;
+  border: 0;
+  border-radius: 1.25rem;
+  background: var(--pill);
+  color: var(--pill-ink);
+  font-size: 3.6rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.pill-btn:active { transform: scale(0.98); }
+
+.since {
+  margin: -0.5rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.moods {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.mood-btn {
+  aspect-ratio: 1;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+  font-size: 2.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+.mood-btn:active { transform: scale(0.94); background: var(--surface-alt); }
+
+button:disabled { opacity: 0.6; cursor: default; }
+
+h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+}
+
+.empty { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+.summary { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.summary th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 0.35rem;
+}
+.summary th:not(:first-child), .summary td:not(:first-child) { text-align: right; }
+.summary td { padding-block: 0.3rem; border-top: 1px solid var(--line); }
+.summary td, .num { font-variant-numeric: tabular-nums; }
+.summary .em { font-size: 1.4rem; line-height: 1; }
+.note { margin: 0.6rem 0 0; font-size: 0.8rem; color: var(--muted); }
+
+.log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.log li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: center;
+  padding-block: 0.55rem;
+  border-top: 1px solid var(--line);
+}
+.log li:first-child { border-top: 0; }
+.log .em { font-size: 1.5rem; line-height: 1; text-align: center; }
+.log .what { min-width: 0; }
+.log .what strong { font-weight: 600; }
+.log .when { display: block; color: var(--muted); font-family: var(--font-mono); font-size: 0.78rem; }
+.log .gap { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); text-align: right; white-space: nowrap; }
+.day { margin: 0.9rem 0 0.1rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.day:first-child { margin-top: 0; }
+
+.actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.small-btn {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  transform: translate(-50%, 1rem);
+  max-width: calc(100% - 2rem);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { transition: none; }
+  .pill-btn:active, .mood-btn:active { transform: none; }
+}
+</style>
+<div class="wrap" id="wrap">
+  <header id="app-header">
+    <h1>Mood and pill log</h1>
+    <p class="sub">Tap 💊 when you take one. Tap a face when you notice how you feel.</p>
+  </header>
+  <script id="entries-data" type="application/json">[]</script>
+  <div id="app"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script id="app-script">
+(function () {
+  var MOODS = [
+    { key: 'sad',     emoji: '😢', label: 'Sad' },
+    { key: 'scared',  emoji: '😨', label: 'Scared' },
+    { key: 'neutral', emoji: '😐', label: 'Neutral' },
+    { key: 'sleepy',  emoji: '😴', label: 'Sleepy' },
+    { key: 'happy',   emoji: '😄', label: 'Happy' }
+  ];
+  var PILL_EMOJI = '💊';
+  var STORAGE_KEY = 'mood-pill-log-local';
+  var MAX_ENTRIES = 3000;
+
+  var appEl = document.getElementById('app');
+  var toastEl = document.getElementById('toast');
+  var toastTimer = null;
+  var busy = false;
+  var readOnly = false;
+  var localNoted = false;
+
+  // Each entry: { t: 'pill' | mood key, ts: ISO time, since: minutes since the previous pill (moods only, null if none yet) }
+  var entries = [];
+  try {
+    var parsed = JSON.parse(document.getElementById('entries-data').textContent);
+    if (Array.isArray(parsed)) entries = parsed;
+  } catch (e) {}
+
+  var artifactPromise = (window.claude && typeof window.claude.use === 'function')
+    ? window.claude.use('artifact').catch(function () { return null; })
+    : Promise.resolve(null);
+
+  // Outside the Claude runtime the log is kept in this browser only.
+  artifactPromise.then(function (api) {
+    if (api) return;
+    try {
+      var local = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if (Array.isArray(local) && !entries.length) { entries = local; render(); }
+    } catch (e) {}
+  });
+
+  function moodByKey(k) {
+    for (var i = 0; i < MOODS.length; i++) if (MOODS[i].key === k) return MOODS[i];
+    return null;
+  }
+
+  function lastPillBefore(list, ms) {
+    var best = null;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].t !== 'pill') continue;
+      var t = Date.parse(list[i].ts);
+      if (t <= ms && (best === null || t > best)) best = t;
+    }
+    return best;
+  }
+
+  function fmtSince(min) {
+    if (min === null || min === undefined) return 'no pill yet';
+    if (min < 1) return 'just now';
+    var h = Math.floor(min / 60), m = Math.round(min % 60);
+    if (m === 60) { h += 1; m = 0; }
+    if (h >= 48) return Math.floor(h / 24) + 'd ' + (h % 24) + 'h';
+    if (h === 0) return m + 'm';
+    return h + 'h ' + (m < 10 ? '0' : '') + m + 'm';
+  }
+
+  function fmtTime(iso) {
+    return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  function fmtDay(iso) {
+    return new Date(iso).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function dayKey(iso) {
+    var d = new Date(iso);
+    return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function renderSummary() {
+    var rows = '';
+    var any = false;
+    MOODS.forEach(function (m) {
+      var n = 0, withPill = 0, sum = 0;
+      entries.forEach(function (e) {
+        if (e.t !== m.key) return;
+        n++;
+        if (typeof e.since === 'number') { withPill++; sum += e.since; }
+      });
+      if (n) any = true;
+      rows += '<tr><td><span class="em" aria-hidden="true">' + m.emoji + '</span> <span>' + m.label + '</span></td>' +
+        '<td>' + n + '</td><td>' + (withPill ? fmtSince(sum / withPill) : '–') + '</td></tr>';
+    });
+    if (!any) {
+      return '<section class="panel"><h2>Mood vs. time since pill</h2><p class="empty">Log a pill, then a mood, and the average time since your last pill shows up here for each mood.</p></section>';
+    }
+    return '<section class="panel"><h2>Mood vs. time since pill</h2>' +
+      '<table class="summary"><thead><tr><th>Mood</th><th>Taps</th><th>Avg since pill</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<p class="note">Averages use only taps that came after a pill was logged.</p></section>';
+  }
+
+  function renderLog() {
+    if (!entries.length) {
+      return '<section class="panel"><h2>Log</h2><p class="empty">Nothing logged yet. Tap 💊 or a face above.</p></section>';
+    }
+    var sorted = entries.slice().sort(function (a, b) { return Date.parse(b.ts) - Date.parse(a.ts); });
+    var html = '', lastDay = null;
+    sorted.forEach(function (e) {
+      var dk = dayKey(e.ts);
+      if (dk !== lastDay) {
+        html += (lastDay === null ? '' : '</ul>') + '<h3 class="day">' + esc(fmtDay(e.ts)) + '</h3><ul class="log">';
+        lastDay = dk;
+      }
+      var isPill = e.t === 'pill';
+      var m = isPill ? null : moodByKey(e.t);
+      var emoji = isPill ? PILL_EMOJI : (m ? m.emoji : '❔');
+      var label = isPill ? 'Took pill' : (m ? m.label : esc(e.t));
+      var gap = isPill ? '' : fmtSince(typeof e.since === 'number' ? e.since : null) + (typeof e.since === 'number' ? ' since pill' : '');
+      html += '<li><span class="em" aria-hidden="true">' + emoji + '</span>' +
+        '<span class="what"><strong>' + label + '</strong><span class="when">' + esc(fmtTime(e.ts)) + '</span></span>' +
+        '<span class="gap">' + esc(gap) + '</span></li>';
+    });
+    return '<section class="panel"><h2>Log</h2>' + html + '</ul></section>';
+  }
+
+  function render() {
+    var lastPill = lastPillBefore(entries, Date.now());
+    var sinceLine = lastPill === null ? 'No pill logged yet' : 'Last pill ' + fmtSince((Date.now() - lastPill) / 60000) + ' ago';
+    var dis = (busy || readOnly) ? ' disabled' : '';
+    var moodBtns = MOODS.map(function (m) {
+      return '<button type="button" class="mood-btn" data-mood="' + m.key + '" aria-label="' + m.label + '"' + dis + '>' + m.emoji + '</button>';
+    }).join('');
+    appEl.innerHTML =
+      '<button type="button" class="pill-btn" data-pill="1" aria-label="Took pill"' + dis + '>' + PILL_EMOJI + '</button>' +
+      '<p class="since">' + sinceLine + '</p>' +
+      '<div class="moods" role="group" aria-label="How do you feel?">' + moodBtns + '</div>' +
+      (readOnly ? '<p class="empty">This log is read-only in your view.</p>' : '') +
+      renderSummary() +
+      renderLog() +
+      (entries.length && !readOnly ? '<div class="actions"><button type="button" class="small-btn" data-undo="1">Undo last tap</button></div>' : '');
+  }
+
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2200);
+  }
+
+  // Returns null if any piece of the page is missing, so a broken copy is never published.
+  function buildFullDocument(list) {
+    var styleEl = document.getElementById('app-style');
+    var headerEl = document.getElementById('app-header');
+    var scriptEl = document.getElementById('app-script');
+    if (!styleEl || !headerEl || !scriptEl || !scriptEl.textContent) return null;
+    var data = JSON.stringify(list).replace(/</g, '\\u003c');
+    return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>' +
+      ':root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}' +
+      '</style></head><body>\n' +
+      '<title>Mood and Pill Log</title>\n' +
+      styleEl.outerHTML + '\n' +
+      '<div class="wrap" id="wrap">\n' +
+      headerEl.outerHTML + '\n' +
+      '<script id="entries-data" type="application/json">' + data + '<\/script>\n' +
+      '<div id="app"></div>\n' +
+      '<div id="toast" class="toast" role="status" aria-live="polite"></div>\n' +
+      '<script id="app-script">' + scriptEl.textContent + '<\/script>\n' +
+      '</div>\n' +
+      '</body></html>';
+  }
+
+  function save(message, prev) {
+    return artifactPromise.then(function (api) {
+      if (api) {
+        var doc = buildFullDocument(entries);
+        if (!doc) {
+          entries = prev; render();
+          showToast("Couldn't save. Reload the page and try again.");
+          return;
+        }
+        return api.publish(doc).then(function () {
+          // The view reloads to the new version.
+        }, function (err) {
+          var code = err && err.code;
+          if (code === 'conflict') return; // the view is reloading to the winner
+          entries = prev;
+          if (code === 'not_writer' || code === 'not_granted' || code === 'consent_required' || code === 'not_declared') {
+            readOnly = true;
+            render();
+            showToast('This log is read-only in your view.');
+            return;
+          }
+          render();
+          showToast("Couldn't save. Try again.");
+        });
+      }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); } catch (e) {}
+      if (!localNoted) {
+        localNoted = true;
+        showToast('Saved on this device only.');
+      } else {
+        showToast(message);
+      }
+    });
+  }
+
+  function add(type) {
+    if (busy || readOnly) return;
+    busy = true;
+    var prev = entries;
+    var now = new Date();
+    var entry = { t: type, ts: now.toISOString() };
+    if (type !== 'pill') {
+      var lp = lastPillBefore(prev, now.getTime());
+      entry.since = lp === null ? null : Math.round((now.getTime() - lp) / 60000);
+    }
+    entries = prev.concat([entry]).slice(-MAX_ENTRIES);
+    render();
+    var m = moodByKey(type);
+    var msg = type === 'pill' ? 'Logged pill ' + fmtTime(entry.ts) : 'Logged ' + (m ? m.label.toLowerCase() : type) + ' ' + fmtTime(entry.ts);
+    showToast(msg);
+    save(msg, prev).then(function () {
+      busy = false;
+      if (!readOnly) render();
+    });
+  }
+
+  function undo() {
+    if (busy || readOnly || !entries.length) return;
+    busy = true;
+    var prev = entries;
+    var latest = 0;
+    for (var i = 1; i < prev.length; i++) if (Date.parse(prev[i].ts) >= Date.parse(prev[latest].ts)) latest = i;
+    entries = prev.filter(function (_, idx) { return idx !== latest; });
+    render();
+    save('Removed last tap', prev).then(function () {
+      busy = false;
+      if (!readOnly) render();
+    });
+  }
+
+  appEl.addEventListener('click', function (ev) {
+    var t = ev.target.closest ? ev.target.closest('button') : null;
+    if (!t) return;
+    if (t.getAttribute('data-pill')) add('pill');
+    else if (t.getAttribute('data-mood')) add(t.getAttribute('data-mood'));
+    else if (t.getAttribute('data-undo')) undo();
+  });
+
+  render();
+  setInterval(function () { if (!busy) render(); }, 60000);
+})();
+  </script>
+</div>

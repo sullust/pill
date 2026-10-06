@@ -32,3 +32,13 @@ Turn **Open as Web App** off when adding it, so the shortcut opens in Safari, wh
 Settings → Pages → Build and deployment → Source: **Deploy from a branch**, then pick the branch that holds these files and the **/ (root)** folder, and save. The launcher is then at https://sullust.github.io/pill/.
 
 GitHub Pages only serves private repositories on a paid plan. On a free plan, make the repository public first; it holds only the app's code and the launcher, not your pill log, and the app link still requires your Claude login.
+
+## Mood and Pill Log
+
+A second app in `mood/`: a 💊 button plus five mood buttons (😢 sad, 😨 scared, 😐 neutral, 😴 sleepy, 😄 happy). A pill tap logs "Took pill" with the date and time. A mood tap logs the mood, the date and time, and the time since the last pill, so you can look for a correlation. A small table shows the average time since pill for each mood.
+
+Live app: https://claude.ai/artifact/QYKkzCaZCYm7hCbWXC4U5W
+
+- `mood/mood-log.html` — the app. Like Pills Left, it saves by republishing itself with the entries embedded in `<script id="entries-data">` (the `artifact` capability).
+- `mood/index.html` — the GitHub Pages launcher with its own 🙂 home-screen icon, at https://sullust.github.io/pill/mood/. Add this page to your iPhone home screen the same way as the Pills Left launcher.
+- `mood/apple-touch-icon.png`, `mood/icon-512.png` — the icon, rendered from Noto Color Emoji (Apache License 2.0).
