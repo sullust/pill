@@ -2,7 +2,7 @@
 <style id="app-style">
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-/* Layout: one narrow column — a big pill button with a Diet Coke button beside it, a row of five mood buttons, a per-mood summary, then the newest-first log. */
+/* Layout: one narrow column — a big pill button with Diet Coke and Ate buttons beside it, a row of five mood buttons, a per-mood summary, then the newest-first log. */
 :root {
   --bg: #F1F3F6;
   --surface: #FFFFFF;
@@ -102,7 +102,7 @@ button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   touch-action: manipulation;
 }
 
-.coke-btn {
+.coke-btn, .ate-btn {
   flex: 1;
   min-width: 0;
   min-height: 4.25rem;
@@ -120,7 +120,7 @@ button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 }
 
 .pill-btn:active { transform: scale(0.98); }
-.coke-btn:active { transform: scale(0.94); background: var(--surface-alt); }
+.coke-btn:active, .ate-btn:active { transform: scale(0.94); background: var(--surface-alt); }
 
 .since {
   margin: -0.6rem 0 0;
@@ -235,15 +235,15 @@ h2 {
 
 @media (prefers-reduced-motion: reduce) {
   .toast { transition: none; }
-  .pill-btn:active, .mood-btn:active, .coke-btn:active { transform: none; }
+  .pill-btn:active, .mood-btn:active, .coke-btn:active, .ate-btn:active { transform: none; }
 }
 </style>
 <div class="wrap" id="wrap">
   <header id="app-header">
     <h1>Mood and pill log</h1>
-    <p class="sub">Tap 💊 when you take one and 🥤 for a Diet Coke. Tap a face when you notice how you feel.</p>
+    <p class="sub">Tap 💊 when you take one, 🥤 for a Diet Coke and 🍽️ when you eat. Tap a face when you notice how you feel.</p>
   </header>
-  <script id="entries-data" type="application/json">[{"t":"pill","ts":"2026-10-06T08:52:00.000Z"},{"t":"happy","ts":"2026-10-06T12:24:29.037Z","since":212},{"t":"happy","ts":"2026-10-06T14:12:31.696Z","since":321}]</script>
+  <script id="entries-data" type="application/json">[{"t":"pill","ts":"2026-10-06T08:52:00.000Z"},{"t":"happy","ts":"2026-10-06T12:24:29.037Z","since":212},{"t":"happy","ts":"2026-10-06T14:12:31.696Z","since":321},{"t":"coke","ts":"2026-10-06T14:19:42.759Z"},{"t":"neutral","ts":"2026-10-06T16:32:45.533Z","since":461}]</script>
   <div id="app"></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script id="app-script">
@@ -257,6 +257,7 @@ h2 {
   ];
   var PILL_EMOJI = '💊';
   var COKE_EMOJI = '🥤';
+  var ATE_EMOJI = '🍽️';
   var STORAGE_KEY = 'mood-pill-log-local';
   var MAX_ENTRIES = 3000;
 
@@ -267,7 +268,7 @@ h2 {
   var readOnly = false;
   var localNoted = false;
 
-  // Each entry: { t: 'pill' | 'coke' | mood key, ts: ISO time, since: minutes since the previous pill (moods only, null if none yet) }
+  // Each entry: { t: 'pill' | 'coke' | 'ate' | mood key, ts: ISO time, since: minutes since the previous pill (moods only, null if none yet) }
   var entries = [];
   try {
     var parsed = JSON.parse(document.getElementById('entries-data').textContent);
@@ -353,7 +354,7 @@ h2 {
 
   function renderLog() {
     if (!entries.length) {
-      return '<section class="panel"><h2>Log</h2><p class="empty">Nothing logged yet. Tap 💊, 🥤 or a face above.</p></section>';
+      return '<section class="panel"><h2>Log</h2><p class="empty">Nothing logged yet. Tap 💊, 🥤, 🍽️ or a face above.</p></section>';
     }
     var sorted = entries.slice().sort(function (a, b) { return Date.parse(b.ts) - Date.parse(a.ts); });
     var html = '', lastDay = null;
@@ -365,10 +366,12 @@ h2 {
       }
       var isPill = e.t === 'pill';
       var isCoke = e.t === 'coke';
-      var m = (isPill || isCoke) ? null : moodByKey(e.t);
-      var emoji = isPill ? PILL_EMOJI : (isCoke ? COKE_EMOJI : (m ? m.emoji : '❔'));
-      var label = isPill ? 'Took pill' : (isCoke ? 'Had Diet Coke' : (m ? m.label : esc(e.t)));
-      var gap = (isPill || isCoke) ? '' : fmtSince(typeof e.since === 'number' ? e.since : null) + (typeof e.since === 'number' ? ' since pill' : '');
+      var isAte = e.t === 'ate';
+      var plain = isPill || isCoke || isAte;
+      var m = plain ? null : moodByKey(e.t);
+      var emoji = isPill ? PILL_EMOJI : (isCoke ? COKE_EMOJI : (isAte ? ATE_EMOJI : (m ? m.emoji : '❔')));
+      var label = isPill ? 'Took pill' : (isCoke ? 'Had Diet Coke' : (isAte ? 'Ate' : (m ? m.label : esc(e.t))));
+      var gap = plain ? '' : fmtSince(typeof e.since === 'number' ? e.since : null) + (typeof e.since === 'number' ? ' since pill' : '');
       html += '<li><span class="em" aria-hidden="true">' + emoji + '</span>' +
         '<span class="what"><strong>' + label + '</strong><span class="when">' + esc(fmtTime(e.ts)) + '</span></span>' +
         '<span class="gap">' + esc(gap) + '</span></li>';
@@ -387,6 +390,7 @@ h2 {
       '<div class="top-row">' +
         '<button type="button" class="pill-btn" data-pill="1" aria-label="Took pill"' + dis + '>' + PILL_EMOJI + '</button>' +
         '<button type="button" class="coke-btn" data-coke="1" aria-label="Had Diet Coke"' + dis + '>' + COKE_EMOJI + '</button>' +
+        '<button type="button" class="ate-btn" data-ate="1" aria-label="Ate"' + dis + '>' + ATE_EMOJI + '</button>' +
       '</div>' +
       '<p class="since">' + sinceLine + '</p>' +
       '<div class="moods" role="group" aria-label="How do you feel?">' + moodBtns + '</div>' +
@@ -466,7 +470,7 @@ h2 {
     var prev = entries;
     var now = new Date();
     var entry = { t: type, ts: now.toISOString() };
-    if (type !== 'pill' && type !== 'coke') {
+    if (type !== 'pill' && type !== 'coke' && type !== 'ate') {
       var lp = lastPillBefore(prev, now.getTime());
       entry.since = lp === null ? null : Math.round((now.getTime() - lp) / 60000);
     }
@@ -475,6 +479,7 @@ h2 {
     var m = moodByKey(type);
     var msg = type === 'pill' ? 'Logged pill ' + fmtTime(entry.ts)
       : type === 'coke' ? 'Logged Diet Coke ' + fmtTime(entry.ts)
+      : type === 'ate' ? 'Logged ate ' + fmtTime(entry.ts)
       : 'Logged ' + (m ? m.label.toLowerCase() : type) + ' ' + fmtTime(entry.ts);
     showToast(msg);
     save(msg, prev).then(function () {
@@ -502,6 +507,7 @@ h2 {
     if (!t) return;
     if (t.getAttribute('data-pill')) add('pill');
     else if (t.getAttribute('data-coke')) add('coke');
+    else if (t.getAttribute('data-ate')) add('ate');
     else if (t.getAttribute('data-mood')) add(t.getAttribute('data-mood'));
     else if (t.getAttribute('data-undo')) undo();
   });
