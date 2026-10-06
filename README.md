@@ -14,6 +14,8 @@ Live app: https://claude.ai/artifact/UqqYWXqzEZcTRZ3gGMx9a4
 
 The app runs as a Claude.ai Artifact with the `artifact` capability. Each tap rebuilds the whole page with the new count and log embedded in `<script id="seed">` and publishes it as a new version, so every browser signed in to your Claude account sees the same data. Opened anywhere without the Claude runtime, it falls back to saving in that browser only and says so.
 
+A daily Claude routine ("Pills Left daily GitHub sync", 12:23 UTC) copies the live app's data into `pills-left.html` here, committing only when it changed, so the repo keeps a history of the log.
+
 To republish from `pills-left.html`, send only the content between `<body>` and `</body></html>` to the Artifact tool; the page rebuilds the same skeleton itself when it saves.
 
 ## Home-screen launcher
