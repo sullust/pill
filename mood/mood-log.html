@@ -78,17 +78,19 @@ h1 {
 
 .sub { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.95rem; }
 
+#app { display: flex; flex-direction: column; gap: 1.25rem; }
+
 button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; }
 button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
 .pill-btn {
   width: 100%;
-  min-height: 6.5rem;
+  min-height: 4.25rem;
   border: 0;
-  border-radius: 1.25rem;
+  border-radius: 1rem;
   background: var(--pill);
   color: var(--pill-ink);
-  font-size: 3.6rem;
+  font-size: 2.4rem;
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -100,7 +102,7 @@ button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .pill-btn:active { transform: scale(0.98); }
 
 .since {
-  margin: -0.5rem 0 0;
+  margin: -0.6rem 0 0;
   text-align: center;
   color: var(--muted);
   font-family: var(--font-mono);
@@ -220,7 +222,7 @@ h2 {
     <h1>Mood and pill log</h1>
     <p class="sub">Tap 💊 when you take one. Tap a face when you notice how you feel.</p>
   </header>
-  <script id="entries-data" type="application/json">[]</script>
+  <script id="entries-data" type="application/json">[{"t":"pill","ts":"2026-10-06T12:24:22.448Z"},{"t":"happy","ts":"2026-10-06T12:24:29.037Z","since":0}]</script>
   <div id="app"></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script id="app-script">
