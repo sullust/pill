@@ -42,3 +42,5 @@ Live app: https://claude.ai/artifact/QYKkzCaZCYm7hCbWXC4U5W
 - `mood/mood-log.html` — the app. Like Pills Left, it saves by republishing itself with the entries embedded in `<script id="entries-data">` (the `artifact` capability).
 - `mood/index.html` — the GitHub Pages launcher with its own 🙂 home-screen icon, at https://sullust.github.io/pill/mood/. Add this page to your iPhone home screen the same way as the Pills Left launcher.
 - `mood/apple-touch-icon.png`, `mood/icon-512.png` — the icon, rendered from Noto Color Emoji (Apache License 2.0).
+
+A daily Claude routine ("Mood Log daily GitHub sync", 12:47 UTC) copies the live log's entries into `mood/data/entries.json`, committing only when they changed, so the repo keeps a history of the data.
