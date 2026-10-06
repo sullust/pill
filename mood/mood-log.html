@@ -243,7 +243,7 @@ h2 {
     <h1>Mood and pill log</h1>
     <p class="sub">Tap 💊 when you take one, 🥤 for a Diet Coke and 🍽️ when you eat. Tap a face when you notice how you feel.</p>
   </header>
-  <script id="entries-data" type="application/json">[{"t":"pill","ts":"2026-10-06T08:52:00.000Z"},{"t":"happy","ts":"2026-10-06T12:24:29.037Z","since":212},{"t":"happy","ts":"2026-10-06T14:12:31.696Z","since":321},{"t":"coke","ts":"2026-10-06T14:19:42.759Z"},{"t":"neutral","ts":"2026-10-06T16:32:45.533Z","since":461}]</script>
+  <script id="entries-data" type="application/json">[{"t":"pill","ts":"2026-10-06T08:52:00.000Z"},{"t":"happy","ts":"2026-10-06T12:24:29.037Z","since":212},{"t":"happy","ts":"2026-10-06T14:12:31.696Z","since":321},{"t":"coke","ts":"2026-10-06T14:19:42.759Z"},{"t":"neutral","ts":"2026-10-06T16:32:45.533Z","since":461},{"t":"ate","ts":"2026-10-06T16:00:00.000Z"},{"t":"coke","ts":"2026-10-06T16:44:56.466Z"}]</script>
   <div id="app"></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script id="app-script">
@@ -268,7 +268,7 @@ h2 {
   var readOnly = false;
   var localNoted = false;
 
-  // Each entry: { t: 'pill' | 'coke' | 'ate' | mood key, ts: ISO time, since: minutes since the previous pill (moods only, null if none yet) }
+  // Each entry: { t: 'pill' | 'coke' | 'ate' | mood key, ts: ISO time in UTC, since: minutes since the previous pill (moods only, null if none yet) }
   var entries = [];
   try {
     var parsed = JSON.parse(document.getElementById('entries-data').textContent);
