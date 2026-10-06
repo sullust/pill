@@ -370,7 +370,7 @@ h2 {
       var plain = isPill || isCoke || isAte;
       var m = plain ? null : moodByKey(e.t);
       var emoji = isPill ? PILL_EMOJI : (isCoke ? COKE_EMOJI : (isAte ? ATE_EMOJI : (m ? m.emoji : '❔')));
-      var label = isPill ? 'Took pill' : (isCoke ? 'Had Diet Coke' : (isAte ? 'Ate' : (m ? m.label : esc(e.t))));
+      var label = isPill ? 'Took pill' : (isCoke ? 'Diet Coke' : (isAte ? 'Ate' : (m ? m.label : esc(e.t))));
       var gap = plain ? '' : fmtSince(typeof e.since === 'number' ? e.since : null) + (typeof e.since === 'number' ? ' since pill' : '');
       html += '<li><span class="em" aria-hidden="true">' + emoji + '</span>' +
         '<span class="what"><strong>' + label + '</strong><span class="when">' + esc(fmtTime(e.ts)) + '</span></span>' +
@@ -389,7 +389,7 @@ h2 {
     appEl.innerHTML =
       '<div class="top-row">' +
         '<button type="button" class="pill-btn" data-pill="1" aria-label="Took pill"' + dis + '>' + PILL_EMOJI + '</button>' +
-        '<button type="button" class="coke-btn" data-coke="1" aria-label="Had Diet Coke"' + dis + '>' + COKE_EMOJI + '</button>' +
+        '<button type="button" class="coke-btn" data-coke="1" aria-label="Diet Coke"' + dis + '>' + COKE_EMOJI + '</button>' +
         '<button type="button" class="ate-btn" data-ate="1" aria-label="Ate"' + dis + '>' + ATE_EMOJI + '</button>' +
       '</div>' +
       '<p class="since">' + sinceLine + '</p>' +
