@@ -35,7 +35,7 @@ GitHub Pages only serves private repositories on a paid plan. On a free plan, ma
 
 ## Mood and Pill Log
 
-A second app in `mood/`: a 💊 button plus eight mood buttons (😢 sad, 😨 scared, 😐 neutral, 😴 sleepy, 😄 happy, 🤢 sick, 🫨 restless, ⚡ wired). A pill tap logs "Took pill" with the date and time. A mood tap logs the mood, the date and time, and the time since the last pill, so you can look for a correlation. A 🍽️ button beside the pill button logs "Ate" with the date and time (no time-since figure; that stays pill-only). Older "Diet Coke" entries from a since-removed 🥤 button still show in the log. A small table shows the average time since pill for each mood.
+A second app in `mood/`: a 💊 button plus eight mood buttons (😢 sad, 😨 scared, 😐 neutral, 😴 sleepy, 😄 happy, 🤢 sick, 🫨 restless, ⚡ wired). A pill tap logs "Took pill" with the date and time. A mood tap logs the mood, the date and time, and the time since the last pill, so you can look for a correlation. A 🍽️ button beside the pill button logs "Ate" with the date and time (no time-since figure; that stays pill-only). Older "Diet Coke" entries from a since-removed 🥤 button still show in the log. A small table shows the average time since pill for each mood. Each log row has a ✕ button that deletes that entry after a second confirming tap.
 
 Live app: https://claude.ai/artifact/QYKkzCaZCYm7hCbWXC4U5W
 

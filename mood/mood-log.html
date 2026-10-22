@@ -13,6 +13,7 @@
   --pill: #2346C8;
   --pill-ink: #FFFFFF;
   --focus: #18212C;
+  --danger: #B4231B;
   --font-display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
   --font-body: "Figtree", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -29,6 +30,7 @@
     --pill: #7C97FF;
     --pill-ink: #0B1330;
     --focus: #E8EEF5;
+    --danger: #FF8A7E;
     color-scheme: dark;
   }
 }
@@ -43,6 +45,7 @@
   --pill: #7C97FF;
   --pill-ink: #0B1330;
   --focus: #E8EEF5;
+  --danger: #FF8A7E;
   color-scheme: dark;
 }
 
@@ -191,7 +194,7 @@ h2 {
 .log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .log li {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  grid-template-columns: 2rem minmax(0, 1fr) auto auto;
   gap: 0.6rem;
   align-items: center;
   padding-block: 0.55rem;
@@ -203,6 +206,20 @@ h2 {
 .log .what strong { font-weight: 600; }
 .log .when { display: block; color: var(--muted); font-family: var(--font-mono); font-size: 0.78rem; }
 .log .gap { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); text-align: right; white-space: nowrap; }
+.del-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.del-btn:hover { border-color: var(--line); }
+.del-btn.armed { border-color: var(--danger); color: var(--danger); font-weight: 600; }
 .day { margin: 0.9rem 0 0.1rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .day:first-child { margin-top: 0; }
 
@@ -243,7 +260,7 @@ h2 {
     <h1>Mood and pill log</h1>
     <p class="sub">Tap 💊 when you take one and 🍽️ when you eat. Tap a face when you notice how you feel.</p>
   </header>
-  <script id="entries-data" type="application/json">[{"t":"pill","ts":"2026-10-06T08:52:00.000Z"},{"t":"happy","ts":"2026-10-06T12:24:29.037Z","since":212},{"t":"happy","ts":"2026-10-06T14:12:31.696Z","since":321},{"t":"coke","ts":"2026-10-06T14:19:42.759Z"},{"t":"neutral","ts":"2026-10-06T16:32:45.533Z","since":461},{"t":"ate","ts":"2026-10-06T16:00:00.000Z"},{"t":"coke","ts":"2026-10-06T16:44:56.466Z"},{"t":"pill","ts":"2026-10-06T16:49:22.345Z"},{"t":"sleepy","ts":"2026-10-06T18:27:44.469Z","since":98},{"t":"sleepy","ts":"2026-10-06T20:08:54.076Z","since":200},{"t":"coke","ts":"2026-10-06T20:09:04.851Z"},{"t":"neutral","ts":"2026-10-06T21:51:17.382Z","since":302},{"t":"coke","ts":"2026-10-06T21:51:19.380Z"},{"t":"coke","ts":"2026-10-06T21:51:33.405Z"},{"t":"coke","ts":"2026-10-06T23:13:02.113Z"},{"t":"happy","ts":"2026-10-06T23:13:05.170Z","since":384},{"t":"sleepy","ts":"2026-10-07T02:01:23.220Z","since":552},{"t":"coke","ts":"2026-10-07T02:01:24.743Z"},{"t":"neutral","ts":"2026-10-07T10:56:59.916Z","since":1088},{"t":"coke","ts":"2026-10-07T10:57:01.680Z"},{"t":"coke","ts":"2026-10-07T11:54:53.708Z"},{"t":"neutral","ts":"2026-10-07T11:54:55.529Z","since":1146},{"t":"coke","ts":"2026-10-07T11:55:22.641Z"},{"t":"ate","ts":"2026-10-07T11:55:32.079Z"},{"t":"neutral","ts":"2026-10-07T13:14:48.419Z","since":1225},{"t":"pill","ts":"2026-10-07T13:14:49.763Z"},{"t":"coke","ts":"2026-10-07T14:34:32.844Z"},{"t":"neutral","ts":"2026-10-07T14:34:39.308Z","since":80},{"t":"coke","ts":"2026-10-07T16:28:29.516Z"},{"t":"happy","ts":"2026-10-07T16:28:30.979Z","since":194},{"t":"coke","ts":"2026-10-07T16:45:26.387Z"},{"t":"coke","ts":"2026-10-07T17:39:50.871Z"},{"t":"happy","ts":"2026-10-07T17:39:52.400Z","since":265},{"t":"coke","ts":"2026-10-07T18:23:06.461Z"},{"t":"neutral","ts":"2026-10-07T18:23:11.378Z","since":308},{"t":"ate","ts":"2026-10-07T19:04:34.516Z"},{"t":"neutral","ts":"2026-10-07T19:04:36.629Z","since":350},{"t":"coke","ts":"2026-10-07T19:30:43.352Z"},{"t":"sleepy","ts":"2026-10-07T19:30:44.825Z","since":376},{"t":"pill","ts":"2026-10-07T19:46:53.185Z"},{"t":"neutral","ts":"2026-10-07T20:15:55.640Z","since":29},{"t":"sleepy","ts":"2026-10-08T09:35:03.711Z","since":828},{"t":"coke","ts":"2026-10-08T09:46:54.401Z"},{"t":"pill","ts":"2026-10-08T10:53:31.565Z"},{"t":"neutral","ts":"2026-10-08T10:53:36.009Z","since":0},{"t":"coke","ts":"2026-10-08T10:53:40.196Z"},{"t":"neutral","ts":"2026-10-08T13:12:52.931Z","since":139},{"t":"neutral","ts":"2026-10-08T14:29:04.316Z","since":216},{"t":"neutral","ts":"2026-10-08T16:39:47.512Z","since":346},{"t":"sleepy","ts":"2026-10-08T19:53:21.373Z","since":540},{"t":"ate","ts":"2026-10-08T19:53:23.258Z"},{"t":"sleepy","ts":"2026-10-08T21:56:48.737Z","since":663},{"t":"ate","ts":"2026-10-08T21:56:50.074Z"},{"t":"pill","ts":"2026-10-09T10:27:23.437Z"},{"t":"sleepy","ts":"2026-10-09T10:27:33.012Z","since":0},{"t":"neutral","ts":"2026-10-10T15:19:56.523Z","since":1733},{"t":"pill","ts":"2026-10-10T15:19:57.841Z"},{"t":"pill","ts":"2026-10-11T11:47:14.881Z"},{"t":"neutral","ts":"2026-10-11T11:47:16.202Z","since":0},{"t":"sick","ts":"2026-10-11T13:59:54.433Z","since":133},{"t":"pill","ts":"2026-10-11T15:02:45.524Z"},{"t":"sick","ts":"2026-10-11T15:02:46.871Z","since":0},{"t":"sick","ts":"2026-10-11T16:18:14.845Z","since":75},{"t":"happy","ts":"2026-10-11T19:10:55.803Z","since":248},{"t":"ate","ts":"2026-10-11T20:02:20.938Z"},{"t":"sleepy","ts":"2026-10-11T20:15:48.037Z","since":313},{"t":"sleepy","ts":"2026-10-12T10:05:44.372Z","since":1143},{"t":"ate","ts":"2026-10-12T10:56:09.673Z"},{"t":"pill","ts":"2026-10-12T12:13:39.848Z"},{"t":"neutral","ts":"2026-10-12T12:13:41.281Z","since":0},{"t":"pill","ts":"2026-10-13T10:50:43.988Z"},{"t":"neutral","ts":"2026-10-13T14:00:41.423Z","since":190},{"t":"pill","ts":"2026-10-13T14:17:09.556Z"},{"t":"neutral","ts":"2026-10-13T17:50:58.654Z","since":214},{"t":"ate","ts":"2026-10-14T12:46:56.178Z"},{"t":"neutral","ts":"2026-10-14T12:47:00.256Z","since":1350},{"t":"sick","ts":"2026-10-14T18:09:41.612Z","since":1673},{"t":"restless","ts":"2026-10-15T09:43:50.884Z","since":2607},{"t":"restless","ts":"2026-10-15T11:34:29.007Z","since":2717},{"t":"restless","ts":"2026-10-16T10:09:40.898Z","since":4073},{"t":"ate","ts":"2026-10-16T15:13:55.663Z"},{"t":"restless","ts":"2026-10-16T16:09:13.114Z","since":4432},{"t":"restless","ts":"2026-10-17T12:27:00.599Z","since":5650},{"t":"restless","ts":"2026-10-17T13:00:15.250Z","since":5683},{"t":"neutral","ts":"2026-10-17T17:30:02.399Z","since":5953},{"t":"restless","ts":"2026-10-17T17:37:31.049Z","since":5960},{"t":"restless","ts":"2026-10-18T11:58:56.222Z","since":7062},{"t":"restless","ts":"2026-10-18T16:13:58.912Z","since":7317},{"t":"neutral","ts":"2026-10-18T19:02:28.027Z","since":7485},{"t":"ate","ts":"2026-10-18T19:03:08.919Z"},{"t":"sick","ts":"2026-10-19T11:30:27.713Z","since":8473},{"t":"restless","ts":"2026-10-19T13:18:13.253Z","since":8581},{"t":"ate","ts":"2026-10-19T14:01:12.987Z"},{"t":"restless","ts":"2026-10-19T14:53:23.398Z","since":8676},{"t":"restless","ts":"2026-10-19T15:41:54.390Z","since":8725},{"t":"restless","ts":"2026-10-19T18:13:44.107Z","since":8877},{"t":"neutral","ts":"2026-10-20T13:10:07.239Z","since":10013},{"t":"ate","ts":"2026-10-20T13:10:19.604Z"},{"t":"neutral","ts":"2026-10-20T15:00:32.413Z","since":10123},{"t":"ate","ts":"2026-10-20T16:32:45.801Z"},{"t":"restless","ts":"2026-10-20T16:32:52.830Z","since":10216},{"t":"pill","ts":"2026-10-20T18:43:19.469Z"},{"t":"neutral","ts":"2026-10-20T18:43:22.585Z","since":0}]</script>
+  <script id="entries-data" type="application/json">[{"t":"pill","ts":"2026-10-06T08:52:00.000Z"},{"t":"happy","ts":"2026-10-06T12:24:29.037Z","since":212},{"t":"happy","ts":"2026-10-06T14:12:31.696Z","since":321},{"t":"coke","ts":"2026-10-06T14:19:42.759Z"},{"t":"neutral","ts":"2026-10-06T16:32:45.533Z","since":461},{"t":"ate","ts":"2026-10-06T16:00:00.000Z"},{"t":"coke","ts":"2026-10-06T16:44:56.466Z"},{"t":"pill","ts":"2026-10-06T16:49:22.345Z"},{"t":"sleepy","ts":"2026-10-06T18:27:44.469Z","since":98},{"t":"sleepy","ts":"2026-10-06T20:08:54.076Z","since":200},{"t":"coke","ts":"2026-10-06T20:09:04.851Z"},{"t":"neutral","ts":"2026-10-06T21:51:17.382Z","since":302},{"t":"coke","ts":"2026-10-06T21:51:19.380Z"},{"t":"coke","ts":"2026-10-06T21:51:33.405Z"},{"t":"coke","ts":"2026-10-06T23:13:02.113Z"},{"t":"happy","ts":"2026-10-06T23:13:05.170Z","since":384},{"t":"sleepy","ts":"2026-10-07T02:01:23.220Z","since":552},{"t":"coke","ts":"2026-10-07T02:01:24.743Z"},{"t":"neutral","ts":"2026-10-07T10:56:59.916Z","since":1088},{"t":"coke","ts":"2026-10-07T10:57:01.680Z"},{"t":"coke","ts":"2026-10-07T11:54:53.708Z"},{"t":"neutral","ts":"2026-10-07T11:54:55.529Z","since":1146},{"t":"coke","ts":"2026-10-07T11:55:22.641Z"},{"t":"ate","ts":"2026-10-07T11:55:32.079Z"},{"t":"neutral","ts":"2026-10-07T13:14:48.419Z","since":1225},{"t":"pill","ts":"2026-10-07T13:14:49.763Z"},{"t":"coke","ts":"2026-10-07T14:34:32.844Z"},{"t":"neutral","ts":"2026-10-07T14:34:39.308Z","since":80},{"t":"coke","ts":"2026-10-07T16:28:29.516Z"},{"t":"happy","ts":"2026-10-07T16:28:30.979Z","since":194},{"t":"coke","ts":"2026-10-07T16:45:26.387Z"},{"t":"coke","ts":"2026-10-07T17:39:50.871Z"},{"t":"happy","ts":"2026-10-07T17:39:52.400Z","since":265},{"t":"coke","ts":"2026-10-07T18:23:06.461Z"},{"t":"neutral","ts":"2026-10-07T18:23:11.378Z","since":308},{"t":"ate","ts":"2026-10-07T19:04:34.516Z"},{"t":"neutral","ts":"2026-10-07T19:04:36.629Z","since":350},{"t":"coke","ts":"2026-10-07T19:30:43.352Z"},{"t":"sleepy","ts":"2026-10-07T19:30:44.825Z","since":376},{"t":"pill","ts":"2026-10-07T19:46:53.185Z"},{"t":"neutral","ts":"2026-10-07T20:15:55.640Z","since":29},{"t":"sleepy","ts":"2026-10-08T09:35:03.711Z","since":828},{"t":"coke","ts":"2026-10-08T09:46:54.401Z"},{"t":"pill","ts":"2026-10-08T10:53:31.565Z"},{"t":"neutral","ts":"2026-10-08T10:53:36.009Z","since":0},{"t":"coke","ts":"2026-10-08T10:53:40.196Z"},{"t":"neutral","ts":"2026-10-08T13:12:52.931Z","since":139},{"t":"neutral","ts":"2026-10-08T14:29:04.316Z","since":216},{"t":"neutral","ts":"2026-10-08T16:39:47.512Z","since":346},{"t":"sleepy","ts":"2026-10-08T19:53:21.373Z","since":540},{"t":"ate","ts":"2026-10-08T19:53:23.258Z"},{"t":"sleepy","ts":"2026-10-08T21:56:48.737Z","since":663},{"t":"ate","ts":"2026-10-08T21:56:50.074Z"},{"t":"pill","ts":"2026-10-09T10:27:23.437Z"},{"t":"sleepy","ts":"2026-10-09T10:27:33.012Z","since":0},{"t":"neutral","ts":"2026-10-10T15:19:56.523Z","since":1733},{"t":"pill","ts":"2026-10-10T15:19:57.841Z"},{"t":"pill","ts":"2026-10-11T11:47:14.881Z"},{"t":"neutral","ts":"2026-10-11T11:47:16.202Z","since":0},{"t":"sick","ts":"2026-10-11T13:59:54.433Z","since":133},{"t":"pill","ts":"2026-10-11T15:02:45.524Z"},{"t":"sick","ts":"2026-10-11T15:02:46.871Z","since":0},{"t":"sick","ts":"2026-10-11T16:18:14.845Z","since":75},{"t":"happy","ts":"2026-10-11T19:10:55.803Z","since":248},{"t":"ate","ts":"2026-10-11T20:02:20.938Z"},{"t":"sleepy","ts":"2026-10-11T20:15:48.037Z","since":313},{"t":"sleepy","ts":"2026-10-12T10:05:44.372Z","since":1143},{"t":"ate","ts":"2026-10-12T10:56:09.673Z"},{"t":"pill","ts":"2026-10-12T12:13:39.848Z"},{"t":"neutral","ts":"2026-10-12T12:13:41.281Z","since":0},{"t":"pill","ts":"2026-10-13T10:50:43.988Z"},{"t":"neutral","ts":"2026-10-13T14:00:41.423Z","since":190},{"t":"pill","ts":"2026-10-13T14:17:09.556Z"},{"t":"neutral","ts":"2026-10-13T17:50:58.654Z","since":214},{"t":"ate","ts":"2026-10-14T12:46:56.178Z"},{"t":"neutral","ts":"2026-10-14T12:47:00.256Z","since":1350},{"t":"sick","ts":"2026-10-14T18:09:41.612Z","since":1673},{"t":"restless","ts":"2026-10-15T09:43:50.884Z","since":2607},{"t":"restless","ts":"2026-10-15T11:34:29.007Z","since":2717},{"t":"restless","ts":"2026-10-16T10:09:40.898Z","since":4073},{"t":"ate","ts":"2026-10-16T15:13:55.663Z"},{"t":"restless","ts":"2026-10-16T16:09:13.114Z","since":4432},{"t":"restless","ts":"2026-10-17T12:27:00.599Z","since":5650},{"t":"restless","ts":"2026-10-17T13:00:15.250Z","since":5683},{"t":"neutral","ts":"2026-10-17T17:30:02.399Z","since":5953},{"t":"restless","ts":"2026-10-17T17:37:31.049Z","since":5960},{"t":"restless","ts":"2026-10-18T11:58:56.222Z","since":7062},{"t":"restless","ts":"2026-10-18T16:13:58.912Z","since":7317},{"t":"neutral","ts":"2026-10-18T19:02:28.027Z","since":7485},{"t":"ate","ts":"2026-10-18T19:03:08.919Z"},{"t":"sick","ts":"2026-10-19T11:30:27.713Z","since":8473},{"t":"restless","ts":"2026-10-19T13:18:13.253Z","since":8581},{"t":"ate","ts":"2026-10-19T14:01:12.987Z"},{"t":"restless","ts":"2026-10-19T14:53:23.398Z","since":8676},{"t":"restless","ts":"2026-10-19T15:41:54.390Z","since":8725},{"t":"restless","ts":"2026-10-19T18:13:44.107Z","since":8877},{"t":"neutral","ts":"2026-10-20T13:10:07.239Z","since":10013},{"t":"ate","ts":"2026-10-20T13:10:19.604Z"},{"t":"neutral","ts":"2026-10-20T15:00:32.413Z","since":10123},{"t":"ate","ts":"2026-10-20T16:32:45.801Z"},{"t":"restless","ts":"2026-10-20T16:32:52.830Z","since":10216},{"t":"pill","ts":"2026-10-20T18:43:19.469Z"},{"t":"neutral","ts":"2026-10-20T18:43:22.585Z","since":0},{"t":"wired","ts":"2026-10-20T21:18:32.314Z","since":155},{"t":"neutral","ts":"2026-10-21T10:47:29.160Z","since":964},{"t":"pill","ts":"2026-10-21T11:22:57.164Z"},{"t":"wired","ts":"2026-10-21T17:24:35.872Z","since":362},{"t":"pill","ts":"2026-10-22T13:06:50.396Z"},{"t":"neutral","ts":"2026-10-22T13:06:52.214Z","since":0},{"t":"sleepy","ts":"2026-10-22T13:39:46.640Z","since":33},{"t":"ate","ts":"2026-10-22T13:39:52.614Z"}]</script>
   <div id="app"></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script id="app-script">
@@ -270,6 +287,8 @@ h2 {
   var busy = false;
   var readOnly = false;
   var localNoted = false;
+  var armedDel = null;
+  var armedTimer = null;
 
   // Each entry: { t: 'pill' | 'coke' | 'ate' | mood key, ts: ISO time in UTC, since: minutes since the previous pill (moods only; null if no pill was logged before it) }
   var entries = [];
@@ -377,7 +396,11 @@ h2 {
       var gap = plain ? '' : fmtSince(typeof e.since === 'number' ? e.since : null) + (typeof e.since === 'number' ? ' since pill' : '');
       html += '<li><span class="em" aria-hidden="true">' + emoji + '</span>' +
         '<span class="what"><strong>' + label + '</strong><span class="when">' + esc(fmtTime(e.ts)) + '</span></span>' +
-        '<span class="gap">' + esc(gap) + '</span></li>';
+        '<span class="gap">' + esc(gap) + '</span>' +
+        (readOnly ? '<span></span>' : (armedDel === e.ts
+          ? '<button type="button" class="del-btn armed" data-del="' + esc(e.ts) + '" aria-label="Confirm delete">Delete?</button>'
+          : '<button type="button" class="del-btn" data-del="' + esc(e.ts) + '" aria-label="Delete ' + esc(label) + ' at ' + esc(fmtTime(e.ts)) + '">✕</button>')) +
+        '</li>';
     });
     return '<section class="panel"><h2>Log</h2>' + html + '</ul></section>';
   }
@@ -504,6 +527,27 @@ h2 {
     });
   }
 
+  // Two taps to delete: the first arms the row's button, the second removes the entry.
+  function deleteTap(ts) {
+    if (busy || readOnly) return;
+    if (armedTimer) { clearTimeout(armedTimer); armedTimer = null; }
+    if (armedDel !== ts) {
+      armedDel = ts;
+      render();
+      armedTimer = setTimeout(function () { armedDel = null; render(); }, 4000);
+      return;
+    }
+    armedDel = null;
+    busy = true;
+    var prev = entries;
+    entries = prev.filter(function (e) { return e.ts !== ts; });
+    render();
+    save('Deleted entry', prev).then(function () {
+      busy = false;
+      if (!readOnly) render();
+    });
+  }
+
   appEl.addEventListener('click', function (ev) {
     var t = ev.target.closest ? ev.target.closest('button') : null;
     if (!t) return;
@@ -511,6 +555,7 @@ h2 {
     else if (t.getAttribute('data-ate')) add('ate');
     else if (t.getAttribute('data-mood')) add(t.getAttribute('data-mood'));
     else if (t.getAttribute('data-undo')) undo();
+    else if (t.getAttribute('data-del')) deleteTap(t.getAttribute('data-del'));
   });
 
   render();
